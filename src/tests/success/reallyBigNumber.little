@@ -1,0 +1,5 @@
+program main
+  begin
+      int a;
+      a := 32769;
+  end

@@ -1,0 +1,75 @@
+program main begin
+	int a, b, c, aux;
+
+	function void expr() begin
+		float a, b;
+--		a := 1.1;
+		a := + - stmt(a) stmt(a, c) * stmt(a, b) 2;
+	end
+
+--	function string er() begin
+--	end
+
+	function void decl() begin
+		int a;
+		float b;
+	end
+
+	function void stmt(int a) begin
+		a := + a 1;
+	end
+
+	function void vazio() begin
+	end
+
+	function int fa (int a) begin
+		string str0 := "oi, como vai?";
+		string str1 := "oi, como vou?";
+		int e;
+		read (e);
+		write (e);
+		return e;
+	end
+
+	function int fb (float c, int d) begin
+		float f, g;
+		string str2 := "worked as charm";
+
+		f := 2.2;
+		read (f, g);
+		write(f,g);
+		if (f = 3) then
+			f := 0;
+		else
+			f := 1;
+		endif
+		return + f g;
+	end
+
+	a := 0.2;
+	b := 10;
+	c := + * a b b;
+	for (a := 0; a < b; a := + a 1)
+		c := + a b;
+		aux := a;
+		a := b;
+		b := aux;
+
+--	float a, b, c;
+	a := 1.2;
+	b := 2.1;
+	c := + * a b / b a;
+	if (c < a) then
+		c := + a 1;
+	else
+		c := - a 1;
+	endif
+
+--	string strTeste := "teste";
+--	float a;
+--	float b;
+--	float c, d;
+--	c := 2.1;
+--	d := + 1 c;
+--	a := + 2 * 1 + 3 d;
+end

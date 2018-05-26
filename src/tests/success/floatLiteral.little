@@ -1,0 +1,9 @@
+program main
+	begin
+		float a;
+		a := + 12.2 21.3;
+		float b;
+		b := .123;
+
+		write(b, a);
+	end

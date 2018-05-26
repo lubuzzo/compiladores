@@ -1,0 +1,10 @@
+program main
+  begin
+    int a;
+    int b;
+    a := 10;
+    b := 5;
+    int c;
+    c := / 10 5;
+    return d;
+  end

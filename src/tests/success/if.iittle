@@ -1,0 +1,18 @@
+program main
+  begin
+    int a;
+	float b;
+    a := 0;
+    if (a > 1) then
+      a := 2;
+      b := 5;
+    else
+      a := 0;
+      b := 1;
+      if (a > 2) then
+        b := 1;
+      else
+        b := 0;
+      endif
+    endif
+  end

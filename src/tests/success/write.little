@@ -1,0 +1,11 @@
+program main
+  begin
+	float c,d;
+	string a := "oi";
+	string b := "oioi";
+
+	read(c);
+
+	write(a,b);
+	write(c);
+  end

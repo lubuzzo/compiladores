@@ -1,0 +1,8 @@
+program main begin
+    int a;
+
+    function int soma (int a) begin 
+	int c;        
+	a := + c 10;
+    end
+end

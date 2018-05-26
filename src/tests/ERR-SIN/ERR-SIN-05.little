@@ -1,0 +1,4 @@
+program main begin
+  int a;
+  a := + + + 0;
+end

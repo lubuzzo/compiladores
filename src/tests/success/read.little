@@ -1,0 +1,7 @@
+program main
+  begin
+    float a;
+	int c;
+    string b := "t t";
+    read(a, b, c);
+  end

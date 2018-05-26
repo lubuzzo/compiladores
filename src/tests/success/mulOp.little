@@ -1,0 +1,11 @@
+program main
+  begin
+    float a;
+    int b;
+    float c;
+
+    a := 10.2;
+    b := 5;
+    c := * + 1.2 2.3 3;
+--	d := 12.2;
+  end

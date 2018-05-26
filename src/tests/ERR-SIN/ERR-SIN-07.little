@@ -1,0 +1,11 @@
+program main begin
+  int a, b;
+  float c, d;
+  string str0 := "tes te";
+
+  if (a = b)
+    a := b;
+  else
+    b := a;
+  endif
+end

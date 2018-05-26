@@ -1,0 +1,9 @@
+program main begin
+	string str0 := "tes te";
+--	float a,b,c;
+--	int d, e, f;
+--	string g := "12345 678 987";
+
+--	a := 1;
+--	b := 2.2;
+end
