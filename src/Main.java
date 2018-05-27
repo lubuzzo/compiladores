@@ -49,24 +49,27 @@ public class Main {
             outputFileName = args[0].replace(".", "-") + ".c";
             
 
-            FileOutputStream  outputStream;
-            try {
-               outputStream = new FileOutputStream(outputFileName);
-            } catch ( IOException e ) {
-                System.out.println("Não achei o arquivo " + args[1]);
-                return ;
-            }
-
-            PrintWriter printWriter = new PrintWriter(outputStream, true);
-
-            //Printar código C na tela
-            //PrintWriter printWriter = new PrintWriter(System.out, true);
-            PW pw = new PW();
-            pw.set(printWriter);
-
             Compiler compiler = new Compiler();
             Program p = compiler.compile(input);
-            p.genC(pw);
+            if (p != null) {
+
+                FileOutputStream  outputStream;
+                try {
+                   outputStream = new FileOutputStream(outputFileName);
+                } catch ( IOException e ) {
+                    System.out.println("Não achei o arquivo " + args[1]);
+                    return ;
+                }
+
+                PrintWriter printWriter = new PrintWriter(outputStream, true);
+
+                //Printar código C na tela
+                //PrintWriter printWriter = new PrintWriter(System.out, true);
+                PW pw = new PW();
+                pw.set(printWriter);                
+                
+                p.genC(pw);
+            }
         }
     }
 }

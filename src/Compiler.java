@@ -33,7 +33,8 @@ public class Compiler {
       Program p = program();
       if (error.wasAnErrorSignalled())
         return null;
-      return p;
+      else
+        return p;
     }
 
     public Program program() {
