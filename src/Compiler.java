@@ -176,7 +176,7 @@ public class Compiler {
 
       Expr e = expr(true, parametros, varLocal);
       
-      tiposValidos(v.getTipo(), e.getTipo());
+      tiposValidos(v.getTipo(), e.getTipo(), false);
 
       if ((lexer.token != Symbol.RPAR) && lexer.token != Symbol.SEMICOLON)
         error.signal("Ops, parece que você esqueceu o nosso querido ';'");
@@ -184,7 +184,7 @@ public class Compiler {
       return new AssignmentStatement(v, e);
     }
 
-    private void tiposValidos(String variavel, String valor) {
+    private boolean tiposValidos(String variavel, String valor, boolean funcao) {
       /*
       String só com string
       int só com int
@@ -192,10 +192,15 @@ public class Compiler {
       */
 
       if (variavel.equals("float") && valor.equals("int"))
-        return;
+        return true;
       else if (!(variavel.equals(valor))) {
-        error.signal("Queria tanto " + variavel + ", mas você só me dá " + valor + " :(");
+          if (funcao)
+              return false;
+          else
+            error.signal("Queria tanto " + variavel + ", mas você só me dá " + valor + " :(");
+            return false;
       }
+      return true;
     }
 
     private Expr expr(final boolean deveExistir, final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
@@ -234,7 +239,7 @@ public class Compiler {
           }
           
           if(!(existe))
-            error.signal("É... é... " + lexer.getStringValue() + " é uma variável? Porque meio que ela não foi declarada");
+            error.signal("É... é... " + lexer.getStringValue() + " é uma variável/função? Porque meio que ela não foi declarada");
       }
 
         if (e == null)
@@ -389,6 +394,7 @@ public class Compiler {
     }
 
     private functionDlc func_decl () {
+          
       String functionType = "0";
       String functionName = "0";
       ArrayList<Variable> parametros = new ArrayList<>();
@@ -407,10 +413,8 @@ public class Compiler {
 
       functionName = lexer.getStringValue();
 
-      //TODO: salvar a linha já declarada
-      
       if (funcaoDeclarada(functionName) != null)
-        error.signal("A função " + lexer.getStringValue() + " já existe. Use outro nome");
+        error.signal("A função " + lexer.getStringValue() + " já foi declarada na linha: " + funcaoDeclarada(functionName).getLinha() + ". Use outro nome");
 
       lexer.nextToken();
 
@@ -446,20 +450,24 @@ public class Compiler {
       if (lexer.token != Symbol.BEGIN)
         error.signal("A palavra-chave BEGIN precisa estar presente na função");
 
+      int linhaDeclarada = lexer.getLineNumber();
+      
       lexer.nextToken();
 
       ArrayList<Variable> fncVariaveis = new ArrayList<>();
 
       if (lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING)
         fncVariaveis = var_decl_list(parametros);
-
+      
       StatementList sl = null;
       sl = stmt(parametros, fncVariaveis);      
       
       Statement retorno = sl.getRetorno();
       
       if (retorno != null) {
-          if (retorno.getTipo() != functionType) {
+          if (functionType == "void")
+              error.signal("Funções do tipo void não devem ter retorno", true);
+          else if (!(tiposValidos(functionType, retorno.getTipo(), true))) {
             error.signal("O retorno (" + retorno.getTipo() + ") da função " +  functionName + " (" + functionType + ") são diferentes", true);    
           }
       }
@@ -472,14 +480,13 @@ public class Compiler {
         error.signal("end expected");
 
       lexer.nextToken();
-
-      return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl);
+      
+      return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada);
     }
 
 
     private returnStmt return_stmt(final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
-        //TODO: função não void precisa de um return
-        if (lexer.token != Symbol.RETURN)
+      if (lexer.token != Symbol.RETURN)
         error.signal("Aqui vai a palavra-chave RETURN, não?");
 
       lexer.nextToken();

@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 public class functionDlc extends Statement {
 
-  public functionDlc( String functionType, String functionName, ArrayList<Variable> parametros, ArrayList<Variable> fncVariaveis, StatementList sl) {
+  public functionDlc( String functionType, String functionName, ArrayList<Variable> parametros, ArrayList<Variable> fncVariaveis, StatementList sl, int linha) {
     this.functionType = functionType;
     this.functionName = functionName;
     this.parametros = parametros;
     this.fncVariaveis = fncVariaveis;
     this.sl = sl;
+    this.linhaDeclarada = linha;
   }
 
   public void genC(PW pw) {
@@ -53,10 +54,15 @@ public class functionDlc extends Statement {
   public String stmtNome() {
       return "functionDlc";
   }  
+  
+  public int getLinha() {
+      return this.linhaDeclarada;
+  }
 
   private String functionType;
   private String functionName;
   private ArrayList<Variable> parametros;
   private ArrayList<Variable> fncVariaveis;
   private StatementList sl;
+  private int linhaDeclarada;
 }
