@@ -84,16 +84,25 @@ public class Compiler {
    	      lexer.nextToken();
           if (lexer.token != Symbol.IDENT)
               error.signal("Parece que você esqueceu o nome da variável. Pode verificar, por favor?");
-
-        if (checagem != null) {
-            for (int i = 0; i < checagem.size(); i++) {
-              if (lexer.getStringValue().equals(checagem.get(i).getName()) ) {
-                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");
+          //TODO: salvar o nome da função que variável é redeclarada
+          Variable verificando = null;
+          if (checagem != null) {
+              verificando = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
+              if (verificando != null)
+                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");  
+          } else {
+              verificando = variavelDeclarada(lexer.getStringValue());
+              if (verificando != null)
+                error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
+              else {
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  if (verificando != null)
+                    error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
-            }
-        }
+          }
+          
 
-          Variable v = new Variable(lexer.getStringValue(), tipo);
+          Variable v = new Variable(lexer.getStringValue(), tipo, lexer.getLineNumber());
           vl.add(v);
 
           lexer.nextToken();
@@ -104,7 +113,23 @@ public class Compiler {
             if (lexer.token != Symbol.IDENT)
               error.signal("Parece que você esqueceu o nome da variável. Pode verificar, por favor?");
 
-            v = new Variable(lexer.getStringValue(), tipo);
+            verificando = null;
+            if (checagem != null) {
+              verificando = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
+              if (verificando != null)
+                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");  
+            } else {
+              verificando = variavelDeclarada(lexer.getStringValue());
+              if (verificando != null)
+                error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
+              else {
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  if (verificando != null)
+                    error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
+              }
+            }       
+            
+            v = new Variable(lexer.getStringValue(), tipo, lexer.getLineNumber());
             vl.add(v);
             lexer.nextToken();
           }
@@ -135,7 +160,23 @@ public class Compiler {
             if (lexer.token != Symbol.STRINGLITERAL)
               error.signal("Na LITTLE, as Strings devem começar com \" e ter no máximo 80 caracteres. Verifique se você não se equivocou aqui, ok?");
 
-            Variable v = new Variable(stringName, "string", lexer.getStringValue());
+            Variable verificando = null;
+            if (checagem != null) {
+              verificando = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
+              if (verificando != null)
+                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");  
+            } else {
+              verificando = variavelDeclarada(lexer.getStringValue());
+              if (verificando != null)
+                error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
+              else {
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  if (verificando != null)
+                    error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
+              }
+            }            
+            
+            Variable v = new Variable(stringName, "string", lexer.getStringValue(), lexer.getLineNumber());
 
             vl.add(v);
 
@@ -246,7 +287,7 @@ public class Compiler {
             e = new VariableExpr(variavelDeclarada(lexer.getStringValue()));
 
         if (e == null)
-          e = new VariableExpr(new Variable(lexer.getStringValue()));
+          e = new VariableExpr(new Variable(lexer.getStringValue(), lexer.getLineNumber()));
 
 
         lexer.nextToken();
@@ -266,7 +307,7 @@ public class Compiler {
           while (lexer.token == Symbol.IDENT || lexer.token == Symbol.COMMA) {
             if (lexer.token == Symbol.COMMA)
                 lexer.nextToken();
-            Variable v = new Variable(lexer.getStringValue());
+            Variable v = new Variable(lexer.getStringValue(), lexer.getLineNumber());
             parametros.add(v);
             lexer.nextToken();
           }
@@ -436,7 +477,7 @@ public class Compiler {
         String varTipo = lexer.token.toString();
         lexer.nextToken();
 
-        Variable v = new Variable(lexer.getStringValue(), varTipo);
+        Variable v = new Variable(lexer.getStringValue(), varTipo, lexer.getLineNumber());
         parametros.add(v);
 
         lexer.nextToken();
