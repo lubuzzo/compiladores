@@ -63,6 +63,10 @@ public class functionDlc extends Statement {
   public int getParamCount() {
       return this.paramCount;
   }
+  
+  public Variable getParametro(int i) {
+      return parametros.get(i);
+  }
 
   private String functionType;
   private String functionName;

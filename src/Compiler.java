@@ -307,8 +307,36 @@ public class Compiler {
           while (lexer.token == Symbol.IDENT || lexer.token == Symbol.COMMA) {
             if (lexer.token == Symbol.COMMA)
                 lexer.nextToken();
-            Variable v = new Variable(lexer.getStringValue(), lexer.getLineNumber());
+            
+                Variable v = null;
+
+                if (v == null && checagem != null) {
+                    if (variavelDeclaradaLocal(lexer.getStringValue(), checagem) != null) {
+                        v = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
+                    }
+                }
+          
+                if (v == null && varLocal != null) {
+                    if (variavelDeclaradaLocal(lexer.getStringValue(), varLocal) != null) {
+                        v = variavelDeclaradaLocal(lexer.getStringValue(), varLocal);
+                    }
+                }
+                
+                if (v == null && vl.size() > 0)
+                    if (variavelDeclarada(lexer.getStringValue()) != null) {
+                        v = variavelDeclarada(lexer.getStringValue());
+                    }                    
+                
+                if (v == null)
+                    error.signal(lexer.getStringValue() + " não está declarada");
+            
             parametros.add(v);
+            
+            if (!(parametros.isEmpty())) {
+                if (!(tiposValidos(funcao.getParametro(parametros.size() -1).getTipo(), parametros.get(parametros.size() - 1).getTipo(), true)))
+                    error.signal("O parâmetro " + parametros.size() + " da função " + funcao.getName() + " é do tipo " + funcao.getParametro(parametros.size() - 1).getTipo() + ", mas você passou " + parametros.get(parametros.size() -1).getTipo());
+            }
+            
             lexer.nextToken();
           }
 
