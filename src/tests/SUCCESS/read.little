@@ -3,5 +3,5 @@ program main
     float a;
 	int c;
     string b := "t t";
-    read(a, b, c);
+    read(a, c);
   end

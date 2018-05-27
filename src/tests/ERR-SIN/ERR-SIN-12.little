@@ -1,10 +1,17 @@
 program main begin
-	int a, b, c, aux;
+	float a, b, c, aux;
+
+	function float stmt(float a) begin
+		float j;		
+		j := + j 1;
+		return j;
+	end
+
 
 	function void expr() begin
 		float a, b;
 --		a := 1.1;
-		a := + - stmt(a) stmt(a, c) * stmt(a, b) 2;
+		a := + - stmt(a) stmt(c) * stmt(b) 2;
 	end
 
 --	function string er() begin
@@ -13,10 +20,6 @@ program main begin
 	function void decl() begin
 		int a;
 		float b;
-	end
-
-	function void stmt(int a) begin
-		a := + a 1;
 	end
 
 	function void vazio() begin
@@ -32,10 +35,10 @@ program main begin
 	end
 
 	function int fb (float c, int d) begin
-		float f, g;
+		int f, g;
 		string str2 := "worked as charm";
 
-		f := 2.2;
+		f := 2;
 		read (f, g);
 		write(f,g);
 		if (f = 3) then

@@ -10,11 +10,11 @@ program main begin
 		return e;
 	end
 
-	function float stmt(int a, int b) begin
+	function float stmt(float a, float b) begin
 		return + a b;
 	end
 
-	function int fb (float c, int d) begin
+	function float fb (float c, int d) begin
 		int f;
 		float g;
 		string str2 := "worked as charm";
@@ -32,7 +32,7 @@ program main begin
 
 	function void expr() begin
 		float a, b, c;
-		a := + - stmt(a) stmt(a, c) * stmt(a, b) 2;
+		a := + - stmt(a, b) stmt(a, c) * stmt(a, b) 2;
 	end
 
 

@@ -1,4 +1,0 @@
-program main
-  begin
-      int a;
-      a := + - 7 6 5;

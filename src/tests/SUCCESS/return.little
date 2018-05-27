@@ -6,5 +6,5 @@ program main
     b := 5;
     int c;
     c := / 10 5;
-    return d;
+    return a;
   end

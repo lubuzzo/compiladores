@@ -4,12 +4,6 @@ program main
 	int d;
     float b;
 
-function int teste(float a) begin
-	float j;
-	j := 10;
-	return j;
-end
-
     for (a := 0; a < 2; a := + a 1)
       int c;
       c := 10;

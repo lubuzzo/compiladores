@@ -1,5 +1,0 @@
-program main
-	begin
-		float a;
-		a := + 12 21..2;
-	end

@@ -1,10 +1,10 @@
 program main begin
 	int a, b, c, aux;
 
-	function void expr() begin
-		float a, b;
---		a := 1.1;
-		a := + - stmt(a) stmt(a, c) * stmt(a, b) 2;
+
+	function void stmt(float a) begin
+		float j;
+		j := + j 1;
 	end
 
 --	function string er() begin
@@ -13,10 +13,6 @@ program main begin
 	function void decl() begin
 		int a;
 		float b;
-	end
-
-	function void stmt(int a) begin
-		a := + a 1;
 	end
 
 	function void vazio(void v) begin

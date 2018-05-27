@@ -301,12 +301,16 @@ public class Compiler {
           
           ArrayList<Variable> parametros = new ArrayList<>();
 
-          while (lexer.token == Symbol.IDENT || lexer.token == Symbol.COMMA) {
+          while (lexer.token == Symbol.IDENT || lexer.token == Symbol.COMMA || lexer.token == Symbol.FLOATLITERAL || lexer.token == Symbol.INTLITERAL) {
             if (lexer.token == Symbol.COMMA)
                 lexer.nextToken();
             
                 Variable v = null;
-
+                if (lexer.token == Symbol.INTLITERAL)
+                    v = new Variable(Integer.toString(lexer.getNumberValue()), "int");
+                else if  (lexer.token == Symbol.FLOATLITERAL)
+                    v = new Variable(Float.toString(lexer.getFloatValue()), "float");
+                
                 if (v == null && checagem != null) {
                     if (variavelDeclaradaLocal(lexer.getStringValue(), checagem) != null) {
                         v = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
@@ -338,8 +342,8 @@ public class Compiler {
             lexer.nextToken();
           }
 
-          if (lexer.token != Symbol.RPAR)
-              error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
+          
+          error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
 
           lexer.nextToken();
           
@@ -373,7 +377,7 @@ public class Compiler {
     private Symbol compOp() {
       Symbol op = lexer.token;
       if (lexer.token != Symbol.LT && lexer.token != Symbol.GT && lexer.token != Symbol.EQUAL)
-        error.signal("Quando você A e B, você quer saber a relação entre eles (maior, menor ou igual). O que você quer saber com " + lexer.getStringValue() + "?");
+        error.signal("Quando você compara A e B, você quer saber a relação entre eles (maior, menor ou igual). O que você quer saber com " + lexer.getStringValue() + "?");
         lexer.nextToken();
 
       return op;
