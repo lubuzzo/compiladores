@@ -15,6 +15,14 @@ public class returnStmt extends Statement {
       pw.show("void");
     pw.showln(";");
   }
+  
+  public String stmtNome() {
+      return "return";
+  }  
+  
+    public String getTipo() {
+        return retorno.getTipo();
+  }
 
   private Expr retorno;
 }

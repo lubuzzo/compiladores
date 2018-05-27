@@ -49,6 +49,10 @@ public class functionDlc extends Statement {
   public String getTipo() {
     return this.functionType;
   }
+  
+  public String stmtNome() {
+      return "functionDlc";
+  }  
 
   private String functionType;
   private String functionName;

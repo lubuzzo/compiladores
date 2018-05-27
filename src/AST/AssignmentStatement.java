@@ -30,6 +30,14 @@ public class AssignmentStatement extends Statement {
         pw.show("; ");
     }
 
+  public String stmtNome() {
+      return "assignment";
+  }
+  
+  public String getTipo() {
+      return "null";
+  }
+    
     private Variable v;
     private Expr expr;
 }

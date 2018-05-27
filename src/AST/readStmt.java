@@ -43,6 +43,13 @@ public class readStmt extends Statement {
 
   }
 
+  public String stmtNome() {
+      return "read";
+  }  
+  
+  public String getTipo() {
+    return "null";
+  }  
 
   private ArrayList<Variable> idList;
 }

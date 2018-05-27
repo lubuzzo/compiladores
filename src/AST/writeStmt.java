@@ -44,6 +44,14 @@ public class writeStmt extends Statement {
     pw.showln(");");
 
   }
+  
+  public String stmtNome() {
+      return "write";
+  }
+
+  public String getTipo() {
+    return "null";
+  }  
 
 
   private ArrayList<Variable> idList;

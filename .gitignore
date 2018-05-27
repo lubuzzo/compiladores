@@ -19,3 +19,7 @@ nbproject/*
 *.swp
 *.DS_Store
 *.lock
+
+
+# c gerados
+*.c

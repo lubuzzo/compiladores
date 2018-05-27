@@ -32,7 +32,14 @@ public class forStatement extends Statement {
     pw.println("}");
   }
 
+  public String stmtNome() {
+      return "for";
+  }
 
+  public String getTipo() {
+    return "null";
+  }
+  
   private AssignmentStatement asgt;
   private Expr condicao;
   private AssignmentStatement passo;

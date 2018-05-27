@@ -16,6 +16,19 @@ public class StatementList {
       }
     }
   }
+  
+  public void add(Statement s) {
+      this.v.add(s);
+  }
+  
+  public Statement getRetorno() {
+      for (int i = 0; i < this.v.size(); i++) {
+        if (this.v.get(i).stmtNome().equals("return")) {
+          return v.get(i);
+        }
+      }
+      return null;
+  }
 
   private ArrayList<Statement> v;
 

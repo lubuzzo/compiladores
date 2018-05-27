@@ -28,6 +28,14 @@ public class IfStatement extends Statement {
     pw.println("}");
   }
 
+  public String stmtNome() {
+      return "if";
+  }
+
+    public String getTipo() {
+      return "null";
+    }  
+  
   private Expr expr;
   private StatementList seEntao;
   private StatementList SeNao;

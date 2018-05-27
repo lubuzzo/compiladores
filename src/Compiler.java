@@ -13,7 +13,7 @@ public class Compiler {
   public static final boolean GC = false;
 
 
-  ArrayList<Variable> vl = new ArrayList<>();
+  private ArrayList<Variable> vl = new ArrayList<>();
 
   /*
   Acho que dá para seguir sem SymbolTable...
@@ -21,8 +21,8 @@ public class Compiler {
   //symbolTable = new SymbolTable();
   */
 
-  StatementList sl = null;
-  ArrayList<functionDlc> dlc = new ArrayList<>();
+  private StatementList sl = null;
+  private ArrayList<functionDlc> dlc = new ArrayList<>();
 
     public Program compile( char []p_input ) {
       error = new CompilerError(null);
@@ -39,40 +39,31 @@ public class Compiler {
     public Program program() {
 
       if(lexer.token != Symbol.PROGRAM)
-        error.signal("'PROGRAM' expected");
+        error.signal("Palavra-chave 'PROGRAM' esperada");
 
       lexer.nextToken();
 
       if(lexer.token != Symbol.IDENT)
-        error.signal("identifier of program expected");
+        error.signal("O programa deve ter um identificador, após a palavra chave 'PROGRAM'");
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.BEGIN)
-        error.signal("'BEGIN' expected");
+        error.signal("Após o identificador do programa, deve haver a palavra-chave'BEGIN'");
       lexer.nextToken();
 
       if (lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING)
         vl = var_decl_list(null);
 
-      //lexer.nextToken();
-
-      while (lexer.token == Symbol.FUNCTION) {
+      while (lexer.token == Symbol.FUNCTION)
         dlc.add(func_decl());
-        //System.out.println("token " + lexer.token.toString());
-      }
 
-      //lexer.nextToken();
-
-      //if (!(lexer.token.toString().isEmpty() || lexer.token == Symbol.END ))
       sl = stmt(null, null);
 
-      //lexer.nextToken();
-
       if (lexer.token != Symbol.END)
-        error.signal("'END' expected");
+        error.signal("O programa deve conter a palavra-chave 'END' no final");
 
-        lexer.nextToken();
+      lexer.nextToken();
 
       return new Program(vl, sl, dlc);
     }
@@ -80,7 +71,7 @@ public class Compiler {
     public ArrayList<Variable> var_decl_list(ArrayList<Variable> checagem){
       ArrayList<Variable> vl = new ArrayList<>();
       if (!(lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING))
-        error.signal("Variable type expected");
+        error.signal("Na LITTLE, as variáveis são tipadas de forma explícita. Favor, especificar o tipo da variável");
 
       else if (!(lexer.token == Symbol.STRING)) {
         while (lexer.token == Symbol.FLOAT || lexer.token == Symbol.INT) {
@@ -92,7 +83,7 @@ public class Compiler {
 
    	      lexer.nextToken();
           if (lexer.token != Symbol.IDENT)
-              error.signal("Variable name expected");
+              error.signal("Parece que você esqueceu o nome da variável. Pode verificar, por favor?");
 
         if (checagem != null) {
             for (int i = 0; i < checagem.size(); i++) {
@@ -103,77 +94,65 @@ public class Compiler {
         }
 
           Variable v = new Variable(lexer.getStringValue(), tipo);
-          //ArrayList<Variable> vl = new ArrayList<>();
           vl.add(v);
 
           lexer.nextToken();
 
           while (lexer.token == Symbol.COMMA){
             lexer.nextToken();
+            //TODO: Acho que nesse if, vai dar erro quando houver uma redeclaração de variável com tail
             if (lexer.token != Symbol.IDENT)
-              error.signal("variable name expected");
+              error.signal("Parece que você esqueceu o nome da variável. Pode verificar, por favor?");
 
             v = new Variable(lexer.getStringValue(), tipo);
             vl.add(v);
             lexer.nextToken();
           }
 
-          //lexer.nextToken();
-
           if (lexer.token != Symbol.SEMICOLON)
-            error.signal("';' expected");
+            error.signal("Ops, parece que você esqueceu o nosso querido ';'", true);
 
-            lexer.nextToken();
+          lexer.nextToken();
 
           }
 
         } else {
           while (lexer.token == Symbol.STRING) {
-            //System.out.println("achei string");
             lexer.nextToken();
 
             if (lexer.token != Symbol.IDENT)
-                error.signal("Variable name expected");
+                error.signal("Parece que você esqueceu o nome da String que tava tentando declarar. Pode verificar, por favor?");
 
             String stringName = lexer.getStringValue();
 
             lexer.nextToken();
 
             if (lexer.token != Symbol.ASSIGN)
-                error.signal("':=' expected");
+                error.signal("Na LITTLE, as Strings devem ser declaradas já sendo atribuído o valor (inicializadas), com o operador ':='");
 
             lexer.nextToken();
 
-            //Check no nextToken de " para StringLiteral
-
             if (lexer.token != Symbol.STRINGLITERAL)
-              error.signal("STRINGLITERAL expected");
+              error.signal("Na LITTLE, as Strings devem começar com \" e ter no máximo 80 caracteres. Verifique se você não se equivocou aqui, ok?");
 
             Variable v = new Variable(stringName, "string", lexer.getStringValue());
 
             vl.add(v);
 
-            //Expr e = null;
-            //e = new StringExpr(lexer.getStringValue());
-
             lexer.nextToken();
 
             if (lexer.token != Symbol.SEMICOLON)
-                error.signal("';' expected");
+                error.signal("Ops, parece que você esqueceu do nosso querido ';'", true);
             lexer.nextToken();
           }
         }
-        //System.out.println("token novo: " + lexer.token.toString());
-      return vl;
+        return vl;
     }
 
     public AssignmentStatement assign_stmt(ArrayList<Variable> parametros, ArrayList<Variable> varLocal){
 
-      //System.out.println("entrei " + lexer.getStringValue());
       if (lexer.token != Symbol.IDENT)
-        error.signal("Variable name expected");
-
-        //System.out.println(variavelDeclarada(lexer.getStringValue()).getName());
+        error.signal("Eu acho que você se confundiu aqui. Estamos tentando atribuir o valor para uma variável, mas não achei o nome da variável");
 
       Variable v = variavelDeclarada(lexer.getStringValue());
 
@@ -186,24 +165,21 @@ public class Compiler {
       }
       
       if (v == null)
-        error.signal(lexer.getStringValue() + " not declared");
+        error.signal("Não me leve a mal, mas " + lexer.getStringValue() + " ainda não foi declarada");
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.ASSIGN)
-        error.signal("':=' expected");
+        error.signal("Véi, cadê o ':=' da atribuição? Colabora aí, só tô tentando fazer meu trabalho");
 
       lexer.nextToken();
 
       Expr e = expr(true, parametros, varLocal);
-      /* Podemos usar isso no for */
-
-      //System.out.print(e.getTipo());
       
       tiposValidos(v.getTipo(), e.getTipo());
 
       if ((lexer.token != Symbol.RPAR) && lexer.token != Symbol.SEMICOLON)
-        error.signal("';' expected");
+        error.signal("Ops, parece que você esqueceu o nosso querido ';'");
 
       return new AssignmentStatement(v, e);
     }
@@ -218,13 +194,12 @@ public class Compiler {
       if (variavel.equals("float") && valor.equals("int"))
         return;
       else if (!(variavel.equals(valor))) {
-        error.signal("Esperava " + variavel + ", mas recebi " + valor);
+        error.signal("Queria tanto " + variavel + ", mas você só me dá " + valor + " :(");
       }
     }
 
     private Expr expr(final boolean deveExistir, final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
       Expr e = null;
-      //System.out.println("op: " + lexer.token.toString());
       if (lexer.token == Symbol.INTLITERAL) {
         e = new NumberExpr(lexer.getNumberValue());
         lexer.nextToken();
@@ -235,8 +210,7 @@ public class Compiler {
         e = new StringExpr(lexer.getStringValue());
         lexer.nextToken();
       } else if (lexer.token == Symbol.IDENT) {
-        //Verificar se está declarada a variável ou se é função.
-
+      
         String nomeVerificar = lexer.getStringValue();
         
       if (deveExistir) {
@@ -260,7 +234,7 @@ public class Compiler {
           }
           
           if(!(existe))
-            error.signal(lexer.getStringValue() + " não declarado");
+            error.signal("É... é... " + lexer.getStringValue() + " é uma variável? Porque meio que ela não foi declarada");
       }
 
         if (e == null)
@@ -272,10 +246,7 @@ public class Compiler {
 
         lexer.nextToken();
 
-
-        //Chamando uma função
         if (lexer.token == Symbol.LPAR) {
-          //String funcName = lexer.getStringValue();
           lexer.nextToken();
 
           functionDlc funcao = null;
@@ -283,7 +254,7 @@ public class Compiler {
           funcao = funcaoDeclarada(nomeVerificar);
           
           if (funcao == null)
-              error.signal(nomeVerificar + " é uma função não declarada");
+              error.signal("Olha, se você não declarar a função " + nomeVerificar + " vamos ter um problema aqui... e quem avisa amigo é");
           
           ArrayList<Variable> parametros = new ArrayList<>();
 
@@ -296,7 +267,7 @@ public class Compiler {
           }
 
           if (lexer.token != Symbol.RPAR)
-              error.signal(") expected");
+              error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
 
           lexer.nextToken();
 
@@ -309,22 +280,19 @@ public class Compiler {
         lexer.nextToken();
         Expr l = expr(true, checagem, varLocal);
 
-        //lexer.nextToken();
         Expr r = expr(true, checagem, varLocal);
 
         e = new CompositeExpr(l, op, r);
-        //lexer.nextToken();
       } else {
-        error.signal("Expressao nao valida");
+        error.signal("Mais bagunçada que a vida, só essa sua expressão. Verifica aí, vai, please");
       }
       return e;
     }
 
     private Symbol compOp() {
-      //System.out.println("Comp op: " + lexer.token.toString());
       Symbol op = lexer.token;
       if (lexer.token != Symbol.LT && lexer.token != Symbol.GT && lexer.token != Symbol.EQUAL)
-        error.signal("Comp op invalid");
+        error.signal("Quando você A e B, você quer saber a relação entre eles (maior, menor ou igual). O que você quer saber com " + lexer.getStringValue() + "?");
         lexer.nextToken();
 
       return op;
@@ -333,11 +301,7 @@ public class Compiler {
     private Expr cond(final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
       Expr l = expr(true, checagem, varLocal);
 
-      //lexer.nextToken();
-
       Symbol op = compOp();
-
-      //lexer.nextToken();
 
       Expr r = expr(true, checagem, varLocal);
 
@@ -350,29 +314,23 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token != Symbol.LPAR)
-        error.signal("( expected");
+        error.signal("Cumpade, if precisa de um ( no começo do teste lógico");
       lexer.nextToken();
-
-      //System.out.println("if: " + lexer.token.toString());
 
       ifExpr = cond(checagem, varLocal);
 
-      //lexer.nextToken();
-
       if (lexer.token != Symbol.RPAR)
-        error.signal(") expected");
+        error.signal("Tudo que começa tem um fim. Coloca um ) para terminar seu teste lógico, pode ser?");
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.THEN)
-        error.signal("THEN expected");
+        error.signal("Na LITTLE, depois do teste lógico do if vem um THEN. Entendeu? E que isso não se repita, hein");
 
       lexer.nextToken();
 
       StatementList seEntao = stmt(checagem, varLocal);
       StatementList seNao = null;
-
-      //System.out.println("cheguei: " + lexer.token.toString());
 
       if (lexer.token == Symbol.ELSE) {
         lexer.nextToken();
@@ -380,24 +338,17 @@ public class Compiler {
       }
 
       if (lexer.token != Symbol.ENDIF) {
-        error.signal("ENDIF expected");
+        error.signal("Se você não especificar o ENDIF, não vai funcionar");
       }
-      //lexer.nextToken();
-
+      
       return new IfStatement(ifExpr, seEntao, seNao);
     }
 
     private StatementList stmt(final ArrayList<Variable> parametros, final ArrayList<Variable> varLocal) {
       ArrayList<Statement> v = new ArrayList<Statement>();
-      //System.out.println("entrei no stmt: " + lexer.token.toString());
       while (lexer.token != Symbol.ENDIF && lexer.token != Symbol.ELSE && lexer.token != Symbol.ENDFOR && lexer.token != Symbol.END ) {
         v.add( statement(parametros, varLocal) );
 
-        //lexer.nextToken();
-
-        //System.out.println("STList: " + lexer.token.toString());
-        // if ( lexer.token != Symbol.END && lexer.token != Symbol.EOF && lexer.token != Symbol.SEMICOLON && lexer.token != Symbol.ELSE && lexer.token != Symbol.ENDFOR )
-        //   error.signal("';' expectede");
         if (lexer.token != Symbol.END)
           lexer.nextToken();
       }
@@ -405,8 +356,6 @@ public class Compiler {
     }
 
     private Statement statement(ArrayList<Variable> parametros, ArrayList<Variable> varLocal) {
-      //System.out.println("lexer.token: " + lexer.token.toString());
-
       if (lexer.token == Symbol.FLOAT || lexer.token == Symbol.INT || lexer.token == Symbol.STRING)
         vl.addAll(var_decl_list(null));
       if (lexer.token == Symbol.IF)
@@ -432,7 +381,7 @@ public class Compiler {
       else if (lexer.token == Symbol.WRITE)
         return write_stmt(parametros, varLocal);
       else
-        error.signal("Erro leexico");
+        error.signal("Tela azul da morte. " + lexer.getStringValue() + " era para ser um comando? Eu não conheço");
 
       stmt(null, null);
 
@@ -447,31 +396,33 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token != Symbol.FLOAT && lexer.token != Symbol.INT && lexer.token != Symbol.VOID)
-          error.signal("var_type (FLOAT, INT, VOID) expected at function declaration");
+          error.signal("Presta atenção, as funções precisam ter um tipo (FLOAT, INT, VOID). E você TIPO esqueceu!!! Perdoa a piada ruim e não desiste de mim");
 
       functionType = lexer.token.toString();
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.IDENT)
-          error.signal("IDENTIFIER expected");
+          error.signal("Se você não der um nome para a sua função, não vou saber como chamar ela.");
 
       functionName = lexer.getStringValue();
 
+      //TODO: salvar a linha já declarada
+      
       if (funcaoDeclarada(functionName) != null)
-        error.signal(lexer.getStringValue() + " já estava declarada");
+        error.signal("A função " + lexer.getStringValue() + " já existe. Use outro nome");
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.LPAR)
-          error.signal("'(' expected");
+          error.signal("Eu realmente preciso de um '(' depois do nome da função");
       lexer.nextToken();
 
       if (lexer.token == Symbol.VOID)
-        error.signal("void não aceito como parâmetro da função");
+        error.signal("Maluco, void não é aceito como parâmetro da função");
 
       if (lexer.token == Symbol.STRING)
-        error.signal("string não aceito como parâmetro da função");
+        error.signal("Chato dizer isso, mas string não é aceito como parâmetro da função");
 
       while (lexer.token == Symbol.FLOAT || lexer.token == Symbol.INT || lexer.token == Symbol.COMMA) {
 
@@ -488,12 +439,12 @@ public class Compiler {
       }
 
       if (lexer.token != Symbol.RPAR)
-        error.signal(") expected");
+        error.signal("Depois dos parâmetros vem um ')'. Combinado?");
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.BEGIN)
-        error.signal("begin expected");
+        error.signal("A palavra-chave BEGIN precisa estar presente na função");
 
       lexer.nextToken();
 
@@ -503,32 +454,40 @@ public class Compiler {
         fncVariaveis = var_decl_list(parametros);
 
       StatementList sl = null;
-      sl = stmt(parametros, fncVariaveis);
-
-
-
+      sl = stmt(parametros, fncVariaveis);      
+      
+      Statement retorno = sl.getRetorno();
+      
+      if (retorno != null) {
+          if (retorno.getTipo() != functionType) {
+            error.signal("O retorno (" + retorno.getTipo() + ") da função " +  functionName + " (" + functionType + ") são diferentes", true);    
+          }
+      }
+      
+      if (retorno == null && functionType != "void") {
+          error.signal("A função " + functionName + " é do tipo " + functionType + " você DEVE ter um retorno do tipo " + functionType);
+      }
+      
       if (lexer.token != Symbol.END)
         error.signal("end expected");
 
       lexer.nextToken();
-      //  System.out.println("oi: " + lexer.token.toString());
+
       return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl);
     }
 
 
     private returnStmt return_stmt(final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
-      //System.out.println("oioi");
-      if (lexer.token != Symbol.RETURN)
-        error.signal("return expected");
+        //TODO: função não void precisa de um return
+        if (lexer.token != Symbol.RETURN)
+        error.signal("Aqui vai a palavra-chave RETURN, não?");
 
       lexer.nextToken();
 
       Expr retorno = expr(true, checagem, varLocal);
 
-      //lexer.nextToken();
-
       if (lexer.token != Symbol.SEMICOLON)
-        error.signal("; expected");
+        error.signal("Ops, parece que noss querido ';' foi esquecido de novo");
 
       lexer.nextToken();
 
@@ -544,51 +503,38 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token != Symbol.LPAR) {
-          error.signal("'(' expected");
+          error.signal("Preciso de um '(' depois do FOR");
       }
       lexer.nextToken();
 
-      //Aqui posso verificar se é um ident
-      //Mentira, não posso porque se não tiver assign COND começa com Expr
-
-      //For (i = 0; i < 10; i++)
       if (lexer.token != Symbol.SEMICOLON)
         asgt = assign_stmt(null, null);
 
       if (lexer.token != Symbol.SEMICOLON)
-        error.signal("; expected");
+        error.signal("Logo vão lançar um filme: Esqueceram De Mim - edição ';'");
 
       lexer.nextToken();
 
       if (lexer.token != Symbol.SEMICOLON)
         condicao = cond(checagem, varLocal);
 
-      //lexer.nextToken();
-
       if (lexer.token != Symbol.SEMICOLON)
-        error.signal("; expected");
+        error.signal("Ôia quem esqueceu o ';'. HAHAHAHAHA!");
 
       lexer.nextToken();
 
       if (lexer.token == Symbol.IDENT)
         passo = assign_stmt(null, null);
 
-      //lexer.nextToken();
-
       if (lexer.token != Symbol.RPAR)
         error.signal(") expected");
-
-      //lexer.nextToken();
-
-      //if (lexer.token != Symbol.THEN)
-      //  error.signal("then expected");
 
       lexer.nextToken();
 
       loopFaz = stmt(null, null);
 
       if (lexer.token != Symbol.ENDFOR)
-        error.signal("ENDFOR expected");
+        error.signal("Esqueceu da palavra-chave ENDFOR... só tô fazendo meu trabalho");
 
       return new forStatement(asgt, condicao, passo, loopFaz);
     }
@@ -625,11 +571,11 @@ public class Compiler {
       ArrayList<Variable> idList = new ArrayList<>();
 
       if (lexer.token != Symbol.READ)
-          error.signal("'READ' expected");
+          error.signal("Eu preciso da palavra-chave 'READ' aqui");
       lexer.nextToken();
 
       if (lexer.token != Symbol.LPAR)
-          error.signal("'(' expected");
+          error.signal("Você esqueceu do '(' do read");
       lexer.nextToken();
 
         do {
@@ -639,7 +585,6 @@ public class Compiler {
           if (lexer.token != Symbol.IDENT)
             error.signal("IDENT expected");
 
-          
           Variable v = variavelDeclarada(lexer.getStringValue());
 
           if (v == null && checagem != null) {
@@ -650,13 +595,11 @@ public class Compiler {
               v = variavelDeclaradaLocal(lexer.getStringValue(), varLocal);
           }
           
-          //System.out.println("tipop: " + v.getTipo() + " name: " + v.getName());
-
           if (v == null)
             error.signal("Tentando ler uma variável (" + lexer.getStringValue() + ") não declarada?");
           
           if (v.getTipo() == "string")
-            error.signal("Strings são constantes. Não faz sentido fazer um read em uma constante");          
+            error.signal("Strings são constantes. Não faz sentido fazer um READ em uma constante");          
 
           idList.add(v);
 
@@ -665,13 +608,12 @@ public class Compiler {
         } while (lexer.token == Symbol.COMMA);
 
         if (lexer.token != Symbol.RPAR)
-            error.signal("')' expected");
+            error.signal("Depois das variáveis a serem lidas, vem um ')'.Combinado?");
         lexer.nextToken();
 
         if (lexer.token != Symbol.SEMICOLON)
-            error.signal("';' expected");
-        //lexer.nextToken();
-
+            error.signal("';' é o porquê da programação, ninguém sabe usar... (Pera, eu usei o porquê certo? Tem acento e é junto, né?)");
+        
         return new readStmt(idList);
     }
 
@@ -679,11 +621,11 @@ public class Compiler {
       ArrayList<Variable> idList = new ArrayList<>();
 
       if (lexer.token != Symbol.WRITE)
-          error.signal("'WRITE' expected");
+          error.signal("Tudo que eu queria hoje era um 'WRITE' aqui");
       lexer.nextToken();
 
       if (lexer.token != Symbol.LPAR)
-          error.signal("'(' expected");
+          error.signal("Você esqueceu o '(' do write");
       lexer.nextToken();
 
         do {
@@ -691,7 +633,7 @@ public class Compiler {
             lexer.nextToken();
 
           if (lexer.token != Symbol.IDENT)
-            error.signal("IDENT expected");
+            error.signal("Eu só posso escrever o conteúdo de variáveis. O que eu deveria escrever em um " + lexer.getStringValue());
 
           Variable v = variavelDeclarada(lexer.getStringValue());
 
@@ -703,8 +645,6 @@ public class Compiler {
               v = variavelDeclaradaLocal(lexer.getStringValue(), varLocal);
           }
           
-          //System.out.println("tipop: " + v.getTipo() + " name: " + v.getName());
-
           if (v == null)
             error.signal("Tentando escrever uma variável (" + lexer.getStringValue() + ") não declarada?");         
           
@@ -715,13 +655,12 @@ public class Compiler {
         } while (lexer.token == Symbol.COMMA);
 
         if (lexer.token != Symbol.RPAR)
-            error.signal("')' expected");
+            error.signal("Depois do write tem um ')', você esqueceu");
         lexer.nextToken();
 
         if (lexer.token != Symbol.SEMICOLON)
-            error.signal("';' expected");
-        //lexer.nextToken();
-
+            error.signal("AHA! ';' depois do write foi esquecido");
+        
         return new writeStmt(idList);
     }
 

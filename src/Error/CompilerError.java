@@ -26,8 +26,7 @@ public class CompilerError {
         // is goPreviousToken is true, the error is signalled at the line of the
         // previous token, not the last one.
         if ( goPreviousToken ) {
-          System.out.println("Erro: na linha " + lexer.getLineNumber());
-          System.out.println("Conteudo: "+ lexer.getCurrentLine());
+          System.out.println("Erro: na linha " + (lexer.getLineNumber()-1));
         }
         else {
           System.out.println("Erro: na linha " + lexer.getLineNumber());
