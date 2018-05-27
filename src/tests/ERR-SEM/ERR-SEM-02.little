@@ -1,0 +1,6 @@
+program main begin
+	int a, b, c, d;
+	float e, f, g, h;
+	int a;
+	string i := "teste";
+end

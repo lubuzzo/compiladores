@@ -18,7 +18,6 @@ public class Program {
 
       if ( arrayVariable != null ) {
         for ( Variable v : arrayVariable ) {
-          //System.out.println( v.getTipo() + ": " + v.getName());
           v.genC(pw);
         }
       }
@@ -32,11 +31,8 @@ public class Program {
 
       pw.add();
 
-      //if (v.getTipo() != "string")
-      //System.out.println(statementList.size());
-        statementList.genC(pw);
+      statementList.genC(pw);
 
-      //arrayComandos.genC(pw);
 
       pw.println("return 0;");
 

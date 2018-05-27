@@ -21,7 +21,11 @@ public class Variable {
         this.linhaDeclarada = linha;
     }
 
-
+    public Variable(String name, String tipo) {
+        this.name = name;
+        this.tipo = tipo;
+    }
+    
     public String getTipo() {
       return this.tipo;
     }

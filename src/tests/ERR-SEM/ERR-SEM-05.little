@@ -1,0 +1,5 @@
+program main begin
+	int a, b;
+	a := + - b 6 5;
+	b := + a c;	
+end

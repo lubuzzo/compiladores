@@ -1,0 +1,9 @@
+program main begin
+	int a;
+	
+	function float teste(float b) begin
+		float b;
+		b := 10;
+		return b;
+	end
+end

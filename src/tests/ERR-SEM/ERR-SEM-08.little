@@ -1,0 +1,10 @@
+program main begin
+	float a, b, c;
+
+	function float c(float a, float b) begin
+		return + a b;
+	end
+
+	a := + - b 6 5;
+	b := + 1 c(1, 2.3, 3.2);	
+end
