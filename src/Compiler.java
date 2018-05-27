@@ -9,10 +9,6 @@ public class Compiler {
   private Lexer lexer;
   private CompilerError error;
 
-  // para geracao de codigo
-  public static final boolean GC = false;
-
-
   private ArrayList<Variable> vl = new ArrayList<>();
 
   /*

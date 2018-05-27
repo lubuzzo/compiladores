@@ -61,10 +61,10 @@ public class Main {
                     return ;
                 }
 
-                PrintWriter printWriter = new PrintWriter(outputStream, true);
-
                 //Printar código C na tela
                 //PrintWriter printWriter = new PrintWriter(System.out, true);
+                PrintWriter printWriter = new PrintWriter(outputStream, true);
+                
                 PW pw = new PW();
                 pw.set(printWriter);                
                 
