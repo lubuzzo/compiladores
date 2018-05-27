@@ -512,6 +512,10 @@ public class Compiler {
         if (lexer.token == Symbol.COMMA)
           lexer.nextToken();
 
+        //Alteração perigosa.
+        if (lexer.token == Symbol.IDENT)
+          error.signal("Parece que você esqueceu o tipo da variável (" + lexer.getStringValue() + ")");
+              
         String varTipo = lexer.token.toString();
         lexer.nextToken();
 
