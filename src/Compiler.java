@@ -477,6 +477,9 @@ public class Compiler {
         String varTipo = lexer.token.toString();
         lexer.nextToken();
 
+        if (variavelDeclaradaLocal(lexer.getStringValue(), parametros) != null)
+            error.signal(lexer.getStringValue() + " já é uma parâmetro da função " + functionName);
+        
         Variable v = new Variable(lexer.getStringValue(), varTipo, lexer.getLineNumber());
         parametros.add(v);
 
