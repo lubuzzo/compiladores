@@ -53,7 +53,7 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING)
-        vl = var_decl_list(null);
+        vl = var_decl_list(null, null);
 
       while (lexer.token == Symbol.FUNCTION)
         dlc.add(func_decl());
@@ -68,7 +68,7 @@ public class Compiler {
       return new Program(vl, sl, dlc);
     }
 
-    public ArrayList<Variable> var_decl_list(ArrayList<Variable> checagem){
+    public ArrayList<Variable> var_decl_list(ArrayList<Variable> checagem, String functionName){
       ArrayList<Variable> vl = new ArrayList<>();
       if (!(lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING))
         error.signal("Na LITTLE, as variáveis são tipadas de forma explícita. Favor, especificar o tipo da variável");
@@ -84,12 +84,12 @@ public class Compiler {
    	      lexer.nextToken();
           if (lexer.token != Symbol.IDENT)
               error.signal("Parece que você esqueceu o nome da variável. Pode verificar, por favor?");
-          //TODO: salvar o nome da função que variável é redeclarada
+          
           Variable verificando = null;
           if (checagem != null) {
               verificando = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
               if (verificando != null)
-                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");  
+                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função " + functionName);  
           } else {
               verificando = variavelDeclarada(lexer.getStringValue());
               if (verificando != null)
@@ -117,7 +117,7 @@ public class Compiler {
             if (checagem != null) {
               verificando = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
               if (verificando != null)
-                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");  
+                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função " + functionName);  
             } else {
               verificando = variavelDeclarada(lexer.getStringValue());
               if (verificando != null)
@@ -164,7 +164,7 @@ public class Compiler {
             if (checagem != null) {
               verificando = variavelDeclaradaLocal(lexer.getStringValue(), checagem);
               if (verificando != null)
-                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função");  
+                error.signal(lexer.getStringValue() + " é uma redeclação de um parâmetro da função " + functionName);  
             } else {
               verificando = variavelDeclarada(lexer.getStringValue());
               if (verificando != null)
@@ -403,7 +403,7 @@ public class Compiler {
 
     private Statement statement(ArrayList<Variable> parametros, ArrayList<Variable> varLocal) {
       if (lexer.token == Symbol.FLOAT || lexer.token == Symbol.INT || lexer.token == Symbol.STRING)
-        vl.addAll(var_decl_list(null));
+        vl.addAll(var_decl_list(null, null));
       if (lexer.token == Symbol.IF)
         return if_stmt(parametros, varLocal);
       else if (lexer.token == Symbol.ELSE)
@@ -498,7 +498,7 @@ public class Compiler {
       ArrayList<Variable> fncVariaveis = new ArrayList<>();
 
       if (lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING)
-        fncVariaveis = var_decl_list(parametros);
+        fncVariaveis = var_decl_list(parametros, functionName);
       
       StatementList sl = null;
       sl = stmt(parametros, fncVariaveis);      
