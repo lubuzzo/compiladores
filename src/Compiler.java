@@ -332,10 +332,11 @@ public class Compiler {
             
             parametros.add(v);
             
-            if (!(parametros.isEmpty())) {
+            if (!(parametros.isEmpty()) && (parametros.size() <= funcao.getParamCount())) {
                 if (!(tiposValidos(funcao.getParametro(parametros.size() -1).getTipo(), parametros.get(parametros.size() - 1).getTipo(), true)))
                     error.signal("O parâmetro " + parametros.size() + " da função " + funcao.getName() + " é do tipo " + funcao.getParametro(parametros.size() - 1).getTipo() + ", mas você passou " + parametros.get(parametros.size() -1).getTipo());
-            }
+            } else if (parametros.size() > funcao.getParamCount())
+                error.signal("Você passou mais parâmetros para a função " + funcao.getName() + " do que ela esperava");
             
             lexer.nextToken();
           }
@@ -562,7 +563,7 @@ public class Compiler {
 
       lexer.nextToken();
       
-      return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada, parametros.size());
+      return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada);
     }
 
 
