@@ -109,7 +109,7 @@ public class Compiler {
 
           while (lexer.token == Symbol.COMMA){
             lexer.nextToken();
-            //TODO: Acho que nesse if, vai dar erro quando houver uma redeclaração de variável com tail
+            
             if (lexer.token != Symbol.IDENT)
               error.signal("Parece que você esqueceu o nome da variável. Pode verificar, por favor?");
 
