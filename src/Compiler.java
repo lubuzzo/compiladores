@@ -316,7 +316,16 @@ public class Compiler {
               error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
 
           lexer.nextToken();
-
+          
+          if (parametros.size() != funcao.getParamCount()) {
+              if (funcao.getParamCount() > 1) {
+                  error.signal("Você passsou " + parametros.size() + " parâmetro, mas a função " + funcao.getName() + " deve ter " + funcao.getParamCount() + " parâmetros");
+              } else {
+                error.signal("Você passsou " + parametros.size() + " parâmetro, mas a função " + funcao.getName() + " deve ter " + funcao.getParamCount() + " parâmetro");
+              }
+          }
+              
+          
           e = new functionExpr(nomeVerificar, parametros, funcao.getTipo());
         }
 
@@ -525,7 +534,7 @@ public class Compiler {
 
       lexer.nextToken();
       
-      return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada);
+      return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada, parametros.size());
     }
 
 
