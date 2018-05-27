@@ -23,7 +23,7 @@ public class AssignmentStatement extends Statement {
       }
     }
 
-    public void condC(PW pw, boolean comeco) {
+    public void genC(PW pw, boolean comeco) {
       pw.show( v.getName() + " = ");
       expr.genC(pw);
       if (comeco)

@@ -21,7 +21,7 @@ public class functionDlc extends Statement {
 
     if ( parametros != null ) {
       for ( Variable v : parametros ) {
-        v.condC(pw);
+        pw.show(v.getName());
         if (i++ != parametros.size() - 1)
             pw.show(", ");
       }

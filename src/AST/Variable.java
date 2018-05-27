@@ -41,14 +41,6 @@ public class Variable {
           pw.println( tipo + " " + name + ";");
     }
 
-    public void condC(PW pw) {
-      pw.show(tipo + " " + name);
-    }
-
-    public void simpleC(PW pw) {
-      pw.show(name);
-    }
-
     private String name;
     private String tipo;
     private String valor;

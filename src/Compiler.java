@@ -527,7 +527,7 @@ public class Compiler {
 
         lexer.nextToken();
       }
-
+      
       if (lexer.token != Symbol.RPAR)
         error.signal("Depois dos parâmetros vem um ')'. Combinado?");
 

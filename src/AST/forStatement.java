@@ -13,7 +13,7 @@ public class forStatement extends Statement {
     pw.print("for ( ");
     //System.out.println("expt: " + expr);
     if (asgt != null)
-      asgt.condC(pw, true);
+      asgt.genC(pw, true);
     //pw.show(" ;");
 
     if (condicao != null)
@@ -21,7 +21,7 @@ public class forStatement extends Statement {
     pw.show("; ");
 
     if (passo != null)
-      passo.condC(pw, false);
+      passo.genC(pw, false);
     pw.showln(" ) {");
 
     pw.add();

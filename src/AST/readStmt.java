@@ -34,7 +34,7 @@ public class readStmt extends Statement {
 
       pw.show("&");
       
-      var.simpleC(pw);
+      pw.show(var.getName());
       if (i++ != idList.size() - 1)
         pw.show(", ");
     }

@@ -36,7 +36,7 @@ public class writeStmt extends Statement {
       if (var.getTipo() == "string")
         pw.show("&");
 
-      var.simpleC(pw);
+      pw.show(var.getName());
       if (i++ != idList.size() - 1)
         pw.show(", ");
     }
