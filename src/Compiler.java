@@ -602,7 +602,7 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token != Symbol.SEMICOLON)
-        asgt = assign_stmt(null, null);
+        asgt = assign_stmt(checagem, varLocal);
 
       if (lexer.token != Symbol.SEMICOLON)
         error.signal("Logo vão lançar um filme: Esqueceram De Mim - edição ';'");
@@ -618,14 +618,14 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token == Symbol.IDENT)
-        passo = assign_stmt(null, null);
+        passo = assign_stmt(checagem, varLocal);
 
       if (lexer.token != Symbol.RPAR)
         error.signal(") expected");
 
       lexer.nextToken();
 
-      loopFaz = stmt(null, null);
+      loopFaz = stmt(checagem, varLocal);
 
       if (lexer.token != Symbol.ENDFOR)
         error.signal("Esqueceu da palavra-chave ENDFOR... só tô fazendo meu trabalho");
