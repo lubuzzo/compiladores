@@ -66,7 +66,11 @@ public class Compiler {
     }
 
     public ArrayList<Variable> var_decl_list(ArrayList<Variable> checagem, String functionName){
-      ArrayList<Variable> vl = new ArrayList<>();
+        ArrayList<Variable> vm;
+        if (checagem == null)
+            vm = new ArrayList<>();
+        else
+            vm = checagem;
       if (!(lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING))
         error.signal("Na LITTLE, as variáveis são tipadas de forma explícita. Favor, especificar o tipo da variável");
 
@@ -92,7 +96,7 @@ public class Compiler {
               if (verificando != null)
                 error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               else {
-                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vm);
                   if (verificando != null)
                     error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
@@ -100,7 +104,7 @@ public class Compiler {
           
 
           Variable v = new Variable(lexer.getStringValue(), tipo, lexer.getLineNumber());
-          vl.add(v);
+          vm.add(v);
 
           lexer.nextToken();
 
@@ -120,14 +124,14 @@ public class Compiler {
               if (verificando != null)
                 error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               else {
-                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vm);
                   if (verificando != null)
                     error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
             }       
             
             v = new Variable(lexer.getStringValue(), tipo, lexer.getLineNumber());
-            vl.add(v);
+            vm.add(v);
             lexer.nextToken();
           }
 
@@ -167,7 +171,7 @@ public class Compiler {
               if (verificando != null)
                 error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               else {
-                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vm);
                   if (verificando != null)
                     error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
@@ -175,7 +179,7 @@ public class Compiler {
             
             Variable v = new Variable(stringName, "string", lexer.getStringValue(), lexer.getLineNumber());
 
-            vl.add(v);
+            vm.add(v);
 
             lexer.nextToken();
 
@@ -184,7 +188,7 @@ public class Compiler {
             lexer.nextToken();
           }
         }
-        return vl;
+        return vm;
     }
 
     public AssignmentStatement assign_stmt(ArrayList<Variable> parametros, ArrayList<Variable> varLocal){
@@ -442,7 +446,10 @@ public class Compiler {
 
     private Statement statement(ArrayList<Variable> parametros, ArrayList<Variable> varLocal) {
       if (lexer.token == Symbol.FLOAT || lexer.token == Symbol.INT || lexer.token == Symbol.STRING)
-        vl.addAll(var_decl_list(null, null));
+        if (varLocal == null)
+          vl.addAll(var_decl_list(null, null));
+        else
+           var_decl_list(varLocal, null);
       if (lexer.token == Symbol.IF)
         return if_stmt(parametros, varLocal);
       else if (lexer.token == Symbol.ELSE)
@@ -544,7 +551,7 @@ public class Compiler {
       ArrayList<Variable> fncVariaveis = new ArrayList<>();
 
       if (lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING)
-        fncVariaveis = var_decl_list(parametros, functionName);
+        fncVariaveis = var_decl_list(null, functionName);
       
       StatementList sl = null;
       sl = stmt(parametros, fncVariaveis);      
