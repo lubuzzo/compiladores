@@ -66,7 +66,11 @@ public class Compiler {
     }
 
     public ArrayList<Variable> var_decl_list(ArrayList<Variable> checagem, String functionName){
-      ArrayList<Variable> vl = new ArrayList<>();
+        ArrayList<Variable> vm;
+        if (checagem == null)
+            vm = new ArrayList<>();
+        else
+            vm = checagem;
       if (!(lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING))
         error.signal("Na LITTLE, as variáveis são tipadas de forma explícita. Favor, especificar o tipo da variável");
 
@@ -92,7 +96,7 @@ public class Compiler {
               if (verificando != null)
                 error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               else {
-                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vm);
                   if (verificando != null)
                     error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
@@ -100,7 +104,7 @@ public class Compiler {
           
 
           Variable v = new Variable(lexer.getStringValue(), tipo, lexer.getLineNumber());
-          vl.add(v);
+          vm.add(v);
 
           lexer.nextToken();
 
@@ -120,14 +124,14 @@ public class Compiler {
               if (verificando != null)
                 error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               else {
-                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vm);
                   if (verificando != null)
                     error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
             }       
             
             v = new Variable(lexer.getStringValue(), tipo, lexer.getLineNumber());
-            vl.add(v);
+            vm.add(v);
             lexer.nextToken();
           }
 
@@ -167,7 +171,7 @@ public class Compiler {
               if (verificando != null)
                 error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               else {
-                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vl);
+                  verificando = variavelDeclaradaLocal(lexer.getStringValue(), vm);
                   if (verificando != null)
                     error.signal(lexer.getStringValue() + " já está declarada na linha: " + verificando.getLinha());
               }
@@ -175,7 +179,7 @@ public class Compiler {
             
             Variable v = new Variable(stringName, "string", lexer.getStringValue(), lexer.getLineNumber());
 
-            vl.add(v);
+            vm.add(v);
 
             lexer.nextToken();
 
@@ -184,7 +188,7 @@ public class Compiler {
             lexer.nextToken();
           }
         }
-        return vl;
+        return vm;
     }
 
     public AssignmentStatement assign_stmt(ArrayList<Variable> parametros, ArrayList<Variable> varLocal){
@@ -214,7 +218,7 @@ public class Compiler {
 
       Expr e = expr(true, parametros, varLocal);
       
-      tiposValidos(v.getTipo(), e.getTipo(), false);
+      //tiposValidos(v.getTipo(), e.getTipo(), false);
 
       if ((lexer.token != Symbol.RPAR) && lexer.token != Symbol.SEMICOLON)
         error.signal("Ops, parece que você esqueceu o nosso querido ';'");
@@ -243,15 +247,76 @@ public class Compiler {
 
     private Expr expr(final boolean deveExistir, final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
       Expr e = null;
+      Expr l = null;
+      Symbol op = null;
+      Expr r = null;
+      
       if (lexer.token == Symbol.INTLITERAL) {
         e = new NumberExpr(lexer.getNumberValue());
+        l = e;
+        
         lexer.nextToken();
+        if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            
+            boolean composta = false;
+            
+            if (lexer.token == Symbol.LPAR) {
+                lexer.nextToken();
+                composta = true;
+            }
+            
+            r = expr(true, checagem, varLocal);
+            
+            if (composta && (lexer.token != Symbol.RPAR)) {
+                error.signal("Esperava um ')' para fechar a expr");
+            }
+            
+            if (composta)
+                lexer.nextToken();
+            
+            e = new CompositeExpr(l, op, r);
+        }
       } else if (lexer.token == Symbol.FLOATLITERAL) {
         e = new FloatExpr(lexer.getFloatValue());
+        
+        l = e;
         lexer.nextToken();
+        if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            boolean composta = false;
+            
+            if (lexer.token == Symbol.LPAR) {
+                lexer.nextToken();
+                composta = true;
+            }
+            
+            r = expr(true, checagem, varLocal);
+            
+            if (composta && (lexer.token != Symbol.RPAR)) {
+                error.signal("Esperava um ')' para fechar a expr");
+            }
+            
+            if (composta)
+                lexer.nextToken();
+            
+            e = new CompositeExpr(l, op, r);
+        }
+        
       } else if (lexer.token == Symbol.STRINGLITERAL) {
         e = new StringExpr(lexer.getStringValue());
+        l = e;
         lexer.nextToken();
+        if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            
+            r = expr(true, checagem, varLocal);
+            
+            e = new CompositeExpr(l, op, r);
+        }
       } else if (lexer.token == Symbol.IDENT) {
       
         String nomeVerificar = lexer.getStringValue();
@@ -286,7 +351,7 @@ public class Compiler {
         if (e == null)
           e = new VariableExpr(new Variable(lexer.getStringValue(), lexer.getLineNumber()));
 
-
+        l = e;
         lexer.nextToken();
 
         if (lexer.token == Symbol.LPAR) {
@@ -341,9 +406,11 @@ public class Compiler {
             
             lexer.nextToken();
           }
-
           
-          error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
+          //System.out.println("token: " + lexer.token.toString());
+
+          if (lexer.token != Symbol.RPAR)
+            error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
 
           lexer.nextToken();
           
@@ -357,18 +424,54 @@ public class Compiler {
               
           
           e = new functionExpr(nomeVerificar, parametros, funcao.getTipo());
+        } else if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            boolean composta = false;
+            
+            if (lexer.token == Symbol.LPAR) {
+                lexer.nextToken();
+                composta = true;
+            }
+            
+            r = expr(true, checagem, varLocal);
+            
+            if (composta && (lexer.token != Symbol.RPAR)) {
+                error.signal("Esperava um ')' para fechar a expr");
+            }
+            
+            if (composta)
+                lexer.nextToken();
+            
+            e = new CompositeExpr(l, op, r);
         }
 
       } else if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
-        Symbol op = lexer.token;
+        op = lexer.token;
 
         lexer.nextToken();
-        Expr l = expr(true, checagem, varLocal);
-
-        Expr r = expr(true, checagem, varLocal);
+        
+        r = expr(true, checagem, varLocal);
 
         e = new CompositeExpr(l, op, r);
+      } else if (lexer.token == Symbol.LPAR) {
+          //System.out.print("chute certo\n");
+          lexer.nextToken();
+          r = expr(true, checagem, varLocal);
+          //System.out.println("token: " + lexer.token.toString());
+          if (lexer.token != Symbol.RPAR) {
+              error.signal("Esperava um ')' para fechar o '('");
+          }
+          lexer.nextToken();
+          e = new CompositeExpr(l, op, r);
+          if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            l = e;
+            
+            r = expr(true, checagem, varLocal);
+          }
+          e = new CompositeExpr(l, op, r);
       } else {
+          //System.out.println("token: " + lexer.token.toString());
         error.signal("Mais bagunçada que a vida, só essa sua expressão. Verifica aí, vai, please");
       }
       return e;
@@ -442,7 +545,10 @@ public class Compiler {
 
     private Statement statement(ArrayList<Variable> parametros, ArrayList<Variable> varLocal) {
       if (lexer.token == Symbol.FLOAT || lexer.token == Symbol.INT || lexer.token == Symbol.STRING)
-        vl.addAll(var_decl_list(null, null));
+        if (varLocal == null)
+          vl.addAll(var_decl_list(null, null));
+        else
+           var_decl_list(varLocal, null);
       if (lexer.token == Symbol.IF)
         return if_stmt(parametros, varLocal);
       else if (lexer.token == Symbol.ELSE)
@@ -544,9 +650,14 @@ public class Compiler {
       ArrayList<Variable> fncVariaveis = new ArrayList<>();
 
       if (lexer.token == Symbol.INT || lexer.token == Symbol.FLOAT || lexer.token == Symbol.STRING)
-        fncVariaveis = var_decl_list(parametros, functionName);
+        fncVariaveis = var_decl_list(null, functionName);
       
       StatementList sl = null;
+      
+      int funcaoPos = dlc.size();
+      
+      dlc.add(new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada));
+      
       sl = stmt(parametros, fncVariaveis);      
       
       Statement retorno = sl.getRetorno();
@@ -567,6 +678,8 @@ public class Compiler {
         error.signal("end expected");
 
       lexer.nextToken();
+      
+      dlc.remove(funcaoPos);
       
       return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada);
     }
@@ -602,7 +715,7 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token != Symbol.SEMICOLON)
-        asgt = assign_stmt(null, null);
+        asgt = assign_stmt(checagem, varLocal);
 
       if (lexer.token != Symbol.SEMICOLON)
         error.signal("Logo vão lançar um filme: Esqueceram De Mim - edição ';'");
@@ -618,14 +731,14 @@ public class Compiler {
       lexer.nextToken();
 
       if (lexer.token == Symbol.IDENT)
-        passo = assign_stmt(null, null);
+        passo = assign_stmt(checagem, varLocal);
 
       if (lexer.token != Symbol.RPAR)
         error.signal(") expected");
 
       lexer.nextToken();
 
-      loopFaz = stmt(null, null);
+      loopFaz = stmt(checagem, varLocal);
 
       if (lexer.token != Symbol.ENDFOR)
         error.signal("Esqueceu da palavra-chave ENDFOR... só tô fazendo meu trabalho");

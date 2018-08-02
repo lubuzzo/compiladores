@@ -1,3 +1,5 @@
-program main begin
-	string str := "uma string muito grande para ser salvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-end
+PROGRAM main BEGIN
+  FUNCTION VOID MAIN() BEGIN
+		STRING str := "uma STRING muito grande para ser salvaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+	END
+END

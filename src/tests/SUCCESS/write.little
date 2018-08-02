@@ -1,11 +1,13 @@
-program main
-  begin
-	float c,d;
-	string a := "oi";
-	string b := "oioi";
+PROGRAM main
+  BEGIN
+  FUNCTION VOID MAIN() BEGIN
+  	FLOAT c,d;
+  	STRING a := "oi";
+  	STRING b := "oioi";
 
-	read(c);
+  	READ(c);
 
-	write(a,b);
-	write(c);
-  end
+  	WRITE(a,b);
+  	WRITE(c);
+  END
+END

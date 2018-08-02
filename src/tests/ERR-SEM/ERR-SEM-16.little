@@ -1,8 +1,8 @@
-program main begin
-    int a;
+PROGRAM main BEGIN
+    INT a;
 
-    function int soma (int a) begin 
-	int c;        
-	a := + c 10;
-    end
-end
+    FUNCTION INT soma (INT a) BEGIN
+	   INT c;
+	   a := c + 10;
+    END
+END

@@ -1,5 +1,5 @@
-program main begin
-	int a, b;
+PROGRAM main BEGIN
+	INT a, b;
 	a := + - b 6 5;
 	b := + a c;	
-end
+END

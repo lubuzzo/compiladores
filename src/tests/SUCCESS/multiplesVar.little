@@ -1,10 +1,12 @@
-program main
-  begin
-    int a, b;
-	float c;
-	string d := "te te";
+PROGRAM main
+  BEGIN
+  FUNCTION VOID MAIN() BEGIN
+    INT a, b;
+	FLOAT c;
+	STRING d := "te te";
     a := 1;
     c := 3.4;
     d := "teste";
 	c := 1;
-  end
+  END
+END

@@ -1,4 +1,6 @@
-program main
-  int a;
-  a := + - 7 6 5;
-end
+PROGRAM main
+  FUNCTION VOID MAIN() BEGIN
+    INT a;
+    a := 7 + 6 - 5;
+  END
+END

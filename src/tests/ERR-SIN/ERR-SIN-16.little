@@ -1,3 +1,5 @@
-program main begin
-	string umnomedevariavelqueegrandedemaisparasersalvoouusadoaqui := "uma string legal";
-end
+PROGRAM main BEGIN
+  FUNCTION VOID MAIN() BEGIN
+		STRING umnomedevariavelqueegrandedemaisparasersalvoouusadoaqui := "uma STRING legal";
+	END
+END

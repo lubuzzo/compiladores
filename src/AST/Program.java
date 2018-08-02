@@ -23,10 +23,12 @@ public class Program {
       }
 
       pw.println("");
-      
+
       for (functionDlc fnc : dlc)
         fnc.genC(pw);
 
+      /*
+      Imprimindo 2 funções "main"
       pw.println("int main() {");
 
       pw.add();
@@ -38,6 +40,7 @@ public class Program {
 
       pw.sub();
       pw.println("}");
+      */
     }
 
     private ArrayList<Variable> arrayVariable;

@@ -1,13 +1,15 @@
-program main begin
-	float a, b, c;
+PROGRAM main BEGIN
+	FLOAT a, b, c;
 
-	function float c(float a, float b) begin
-		return + a b;
-	end
+	FUNCTION FLOAT c(FLOAT a, FLOAT b) BEGIN
+		RETURN a + b;
+	END
 
-	read(b);
-	a := + - b 6 5;
-	b := + 1 c(1, 2.3);
-	
-	read(d);
-end
+	FUNCTION VOID MAIN() BEGIN
+		READ(b);
+		a := b + 6 + 5;
+		b := 1 + c(1, 2.3);
+
+		READ(d);
+	END
+END

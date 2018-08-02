@@ -1,7 +1,7 @@
-program main begin
-	int a, b, c, d;
-	float e, f, g, h;
-	string i := "teste";
+PROGRAM main BEGIN
+	INT a, b, c, d;
+	FLOAT e, f, g, h;
+	STRING i := "teste";
 
 	j := 10;
-end
+END

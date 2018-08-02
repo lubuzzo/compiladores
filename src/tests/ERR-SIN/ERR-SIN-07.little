@@ -1,11 +1,13 @@
-program main begin
-  int a, b;
-  float c, d;
-  string str0 := "tes te";
+PROGRAM main BEGIN
+  FUNCTION VOID MAIN() BEGIN
+    INT a, b;
+    FLOAT c, d;
+    STRING str0 := "tes te";
 
-  if (a = b)
-    a := b;
-  else
-    b := a;
-  endif
-end
+    IF (a = b)
+      a := b;
+    ELSE
+      b := a;
+    ENDIF
+  END
+END

@@ -1,7 +1,10 @@
-program main
-  begin
-    float a;
-	int c;
-    string b := "t t";
-    read(a, c);
-  end
+PROGRAM main BEGIN
+
+FUNCTION VOID MAIN() BEGIN
+    FLOAT a;
+	INT c;
+    STRING b := "t t";
+    READ(a, c);
+  END
+
+END

@@ -1,9 +1,11 @@
-program main begin
-	string str0 := "tes te";
---	float a,b,c;
---	int d, e, f;
---	string g := "12345 678 987";
+PROGRAM main BEGIN
+	FUNCTION VOID MAIN() BEGIN
+	STRING str0 := "tes te";
+--	FLOAT a,b,c;
+--	INT d, e, f;
+--	STRING g := "12345 678 987";
 
 --	a := 1;
 --	b := 2.2;
-end
+END
+END

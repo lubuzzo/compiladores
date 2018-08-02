@@ -11,14 +11,18 @@ public class CompositeExpr extends Expr {
     }
 
     public void genC(PW pw) {
-      pw.show("(");
-      left.genC(pw);
-      if (oper == Symbol.EQUAL)
-        pw.show(" == ");
-      else
-        pw.show(" " + oper.toString() + " ");
-      right.genC(pw);
-      pw.show(")");
+      //pw.show("(");
+      if (left != null)
+        left.genC(pw);
+      if (oper != null) {
+        if (oper == Symbol.EQUAL)
+            pw.show(" == ");
+        else
+            pw.show(" " + oper.toString() + " ");
+      }
+      if (right != null)
+        right.genC(pw);
+      //pw.show(")");
     }
 
     public String getTipo() {
