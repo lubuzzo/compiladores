@@ -406,9 +406,11 @@ public class Compiler {
             
             lexer.nextToken();
           }
-
           
-          error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
+          //System.out.println("token: " + lexer.token.toString());
+
+          if (lexer.token != Symbol.RPAR)
+            error.signal("Se o fim justifica os meios, aqui não tem justificativa. Você esqueceu o )");
 
           lexer.nextToken();
           
@@ -651,6 +653,11 @@ public class Compiler {
         fncVariaveis = var_decl_list(null, functionName);
       
       StatementList sl = null;
+      
+      int funcaoPos = dlc.size();
+      
+      dlc.add(new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada));
+      
       sl = stmt(parametros, fncVariaveis);      
       
       Statement retorno = sl.getRetorno();
@@ -671,6 +678,8 @@ public class Compiler {
         error.signal("end expected");
 
       lexer.nextToken();
+      
+      dlc.remove(funcaoPos);
       
       return new functionDlc(functionType, functionName, parametros, fncVariaveis, sl, linhaDeclarada);
     }
