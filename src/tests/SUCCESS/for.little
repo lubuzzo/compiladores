@@ -1,27 +1,27 @@
-program main
-  begin
+PROGRAM main
+  BEGIN
 
-	int x;
+	INT x;
 
-	function int main() begin
-		int a;
-		int d;
-		float b;
+	FUNCTION INT main() BEGIN
+		INT a;
+		INT d;
+		FLOAT b;
 
-		for (a := 0; a < 2; a := + a 1)
-			int c;
+		FOR (a := 0; a < 2; a := a + 1)
+			INT c;
 			c := 10;
-			if (c > 0) then
+			IF (c > 0) THEN
 				c := 20;
-			else
-				for (d := 0; b > 0; a := + a 1)
-					float e;
-					a := + 1 2;
+			ELSE
+				FOR (d := 0; b > 0; a := a + 1)
+					FLOAT e;
+					a := 1 + 2;
 					b := c;
-				endfor
-			endif
-			write(c);
-		endfor
-		return 0;
-	end
-end
+				ENDFOR
+			ENDIF
+			WRITE(c);
+		ENDFOR
+		RETURN 0;
+	END
+END

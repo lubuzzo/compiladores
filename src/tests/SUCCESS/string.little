@@ -1,65 +1,66 @@
-program main begin
-	float a, b, c, aux;
+PROGRAM main BEGIN
+	FLOAT a, b, c, aux;
 
-	function int fa (int a) begin
-		string str0 := "oi, como vai?";
-		string str1 := "oi, como vou?";
-		int e;
-		read (e);
-		write (e);
-		return e;
-	end
+	FUNCTION INT fa (INT a) BEGIN
+		STRING str0 := "oi, como vai?";
+		STRING str1 := "oi, como vou?";
+		INT e;
+		READ (e);
+		WRITE (e);
+		RETURN e;
+	END
 
-	function float stmt(float a, float b) begin
-		return + a b;
-	end
+	FUNCTION FLOAT stmt(FLOAT a, FLOAT b) BEGIN
+		RETURN a + b;
+	END
 
-	function float fb (float c, int d) begin
-		int f;
-		float g;
-		string str2 := "worked as charm";
+	FUNCTION FLOAT fb (FLOAT c, INT d) BEGIN
+		INT f;
+		FLOAT g;
+		STRING str2 := "worked as charm";
 
 		f := 2;
-		read (f, g);
-		write(f,g);
-		if (f = 3) then
+		READ (f, g);
+		WRITE(f,g);
+		IF (f = 3) THEN
 			f := 0;
-		else
+		ELSE
 			f := 1;
-		endif
-		return + f g;
-	end
+		ENDIF
+		RETURN f + g;
+	END
 
-	function void expr() begin
-		float a, b, c;
-		a := + - stmt(a, b) stmt(a, c) * stmt(a, b) 2;
-	end
+	FUNCTION VOID expr() BEGIN
+		a := stmt(a, b);
+	END
 
 
-	function void decl() begin
-		int a;
-		float b;
-	end
+	FUNCTION VOID decl() BEGIN
+		INT z;
+		FLOAT x;
+	END
 
-	function void vazio() begin
-	end
+	FUNCTION VOID vazio() BEGIN
+	END
 
+	FUNCTION VOID MAIN() BEGIN
 	a := 0.2;
 	b := 10;
-	c := + * a b b;
-	for (a := 0; a < b; a := + a 1)
-		c := + a b;
+	c := a + b * b;
+	FOR (a := 0; a < b; a := a + 1)
+		c := a + b;
 		aux := a;
 		a := b;
 		b := aux;
-	endfor
+	ENDFOR
 
 	a := 1.2;
 	b := 2.1;
-	c := + * a b / b a;
-	if (c < a) then
-		c := + a 1;
-	else
-		c := - a 1;
-	endif
-end
+	c := a + b / b * a;
+	IF (c < a) THEN
+		c := a + 1;
+	ELSE
+		c := a - 1;
+	ENDIF
+	END
+END

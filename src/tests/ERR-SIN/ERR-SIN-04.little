@@ -1,3 +1,5 @@
-program main begin
-  string a := 0;
-end
+PROGRAM main BEGIN
+  FUNCTION VOID MAIN() BEGIN
+    STRING a := 0;
+  END
+END

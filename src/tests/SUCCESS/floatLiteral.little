@@ -1,9 +1,11 @@
-program main
-	begin
-		float a;
-		a := + 12.2 21.3;
-		float b;
-		b := .123;
+PROGRAM main
+	BEGIN
+		FLOAT a;
+		FLOAT b;
 
-		write(b, a);
-	end
+		FUNCTION VOID MAIN() BEGIN
+			b := .123;
+			a := 12.2 + 21.3;
+			WRITE(b, a);
+		END
+	END

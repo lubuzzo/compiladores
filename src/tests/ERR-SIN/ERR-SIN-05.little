@@ -1,4 +1,6 @@
-program main begin
-  int a;
-  a := + + + 0;
-end
+PROGRAM main BEGIN
+  FUNCTION VOID MAIN() BEGIN
+    INT a;
+    a := 0 + + +;
+  END
+END

@@ -1,18 +1,21 @@
-program main
-  begin
-    int a;
-	float b;
+PROGRAM main
+  BEGIN
+
+  FUNCTION VOID MAIN() BEGIN
+    INT a;
+	FLOAT b;
     a := 0;
-    if (a > 1) then
+    IF (a > 1) THEN
       a := 2;
       b := 5;
-    else
+    ELSE
       a := 0;
       b := 1;
-      if (a > 2) then
+      IF (a > 2) THEN
         b := 1;
-      else
+      ELSE
         b := 0;
-      endif
-    endif
-  end
+      ENDIF
+    ENDIF
+  END
+END

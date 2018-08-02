@@ -1,11 +1,13 @@
-program main
-  begin
-    float a;
-    int b;
-    float c;
+PROGRAM main
+  BEGIN
+  FUNCTION VOID MAIN() BEGIN
+    FLOAT a;
+    INT b;
+    FLOAT c;
 
     a := 10.2;
     b := 5;
-    c := * + 1.2 2.3 3;
+    c := 1.2 + 2.3 * 8 + 3;
 --	d := 12.2;
-  end
+  END
+END

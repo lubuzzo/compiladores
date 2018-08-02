@@ -1,5 +1,7 @@
-program main
-  begin
-      int a;
+PROGRAM main
+  BEGIN
+    FUNCTION VOID MAIN() BEGIN
+      INT a;
       a := 32769;
-  end
+    END
+  END
