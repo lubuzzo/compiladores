@@ -218,7 +218,7 @@ public class Compiler {
 
       Expr e = expr(true, parametros, varLocal);
       
-      tiposValidos(v.getTipo(), e.getTipo(), false);
+      //tiposValidos(v.getTipo(), e.getTipo(), false);
 
       if ((lexer.token != Symbol.RPAR) && lexer.token != Symbol.SEMICOLON)
         error.signal("Ops, parece que você esqueceu o nosso querido ';'");
@@ -247,15 +247,76 @@ public class Compiler {
 
     private Expr expr(final boolean deveExistir, final ArrayList<Variable> checagem, final ArrayList<Variable> varLocal) {
       Expr e = null;
+      Expr l = null;
+      Symbol op = null;
+      Expr r = null;
+      
       if (lexer.token == Symbol.INTLITERAL) {
         e = new NumberExpr(lexer.getNumberValue());
+        l = e;
+        
         lexer.nextToken();
+        if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            
+            boolean composta = false;
+            
+            if (lexer.token == Symbol.LPAR) {
+                lexer.nextToken();
+                composta = true;
+            }
+            
+            r = expr(true, checagem, varLocal);
+            
+            if (composta && (lexer.token != Symbol.RPAR)) {
+                error.signal("Esperava um ')' para fechar a expr");
+            }
+            
+            if (composta)
+                lexer.nextToken();
+            
+            e = new CompositeExpr(l, op, r);
+        }
       } else if (lexer.token == Symbol.FLOATLITERAL) {
         e = new FloatExpr(lexer.getFloatValue());
+        
+        l = e;
         lexer.nextToken();
+        if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            boolean composta = false;
+            
+            if (lexer.token == Symbol.LPAR) {
+                lexer.nextToken();
+                composta = true;
+            }
+            
+            r = expr(true, checagem, varLocal);
+            
+            if (composta && (lexer.token != Symbol.RPAR)) {
+                error.signal("Esperava um ')' para fechar a expr");
+            }
+            
+            if (composta)
+                lexer.nextToken();
+            
+            e = new CompositeExpr(l, op, r);
+        }
+        
       } else if (lexer.token == Symbol.STRINGLITERAL) {
         e = new StringExpr(lexer.getStringValue());
+        l = e;
         lexer.nextToken();
+        if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            
+            r = expr(true, checagem, varLocal);
+            
+            e = new CompositeExpr(l, op, r);
+        }
       } else if (lexer.token == Symbol.IDENT) {
       
         String nomeVerificar = lexer.getStringValue();
@@ -290,7 +351,7 @@ public class Compiler {
         if (e == null)
           e = new VariableExpr(new Variable(lexer.getStringValue(), lexer.getLineNumber()));
 
-
+        l = e;
         lexer.nextToken();
 
         if (lexer.token == Symbol.LPAR) {
@@ -361,18 +422,54 @@ public class Compiler {
               
           
           e = new functionExpr(nomeVerificar, parametros, funcao.getTipo());
+        } else if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            op = lexer.token;
+            lexer.nextToken();
+            boolean composta = false;
+            
+            if (lexer.token == Symbol.LPAR) {
+                lexer.nextToken();
+                composta = true;
+            }
+            
+            r = expr(true, checagem, varLocal);
+            
+            if (composta && (lexer.token != Symbol.RPAR)) {
+                error.signal("Esperava um ')' para fechar a expr");
+            }
+            
+            if (composta)
+                lexer.nextToken();
+            
+            e = new CompositeExpr(l, op, r);
         }
 
       } else if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
-        Symbol op = lexer.token;
+        op = lexer.token;
 
         lexer.nextToken();
-        Expr l = expr(true, checagem, varLocal);
-
-        Expr r = expr(true, checagem, varLocal);
+        
+        r = expr(true, checagem, varLocal);
 
         e = new CompositeExpr(l, op, r);
+      } else if (lexer.token == Symbol.LPAR) {
+          //System.out.print("chute certo\n");
+          lexer.nextToken();
+          r = expr(true, checagem, varLocal);
+          //System.out.println("token: " + lexer.token.toString());
+          if (lexer.token != Symbol.RPAR) {
+              error.signal("Esperava um ')' para fechar o '('");
+          }
+          lexer.nextToken();
+          e = new CompositeExpr(l, op, r);
+          if (((lexer.token == Symbol.PLUS) || (lexer.token == Symbol.MINUS) || (lexer.token == Symbol.MULT) || (lexer.token == Symbol.DIV))) {
+            l = e;
+            
+            r = expr(true, checagem, varLocal);
+          }
+          e = new CompositeExpr(l, op, r);
       } else {
+          //System.out.println("token: " + lexer.token.toString());
         error.signal("Mais bagunçada que a vida, só essa sua expressão. Verifica aí, vai, please");
       }
       return e;
